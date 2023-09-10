@@ -2,7 +2,9 @@ package command.executor
 
 import ride_sharing.RideSharingManager
 
-class AddRiderCommandExecutor(rideSharingManager: RideSharingManager) : AbstractCommandExecutor(rideSharingManager) {
+class AddRiderCommandExecutor(
+    rideSharingManager: RideSharingManager, matches: MutableList<String>
+) : AbstractCommandExecutor(rideSharingManager, matches) {
     override fun execute(args: List<String>) {
         val riderId = args[0]
         val x = args[1].toInt()

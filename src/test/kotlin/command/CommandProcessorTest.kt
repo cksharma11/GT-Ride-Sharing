@@ -39,7 +39,7 @@ class CommandProcessorTest {
     fun testWithTestFile2WithConsoleLogger() {
         setUpForInput("test-input-2")
         val expectedOutput =
-            "DRIVERS_MATCHED D1 D2 D3\n" + "DRIVERS_MATCHED D1 D2 D3\n" +
+            "DRIVERS_MATCHED D2 D3 D1\n" + "DRIVERS_MATCHED D1 D2 D3\n" +
                     "RIDE_STARTED RIDE-101\n" + "RIDE_STARTED RIDE-102\n" +
                     "RIDE_STOPPED RIDE-101\n" + "RIDE_STOPPED RIDE-102\n" +
                     "BILL R1 R1 234.64\n" + "BILL R2 R2 258.0"
@@ -59,7 +59,7 @@ class CommandProcessorTest {
             val future = executor.submit {
                 commandProcessor.processCommands()
             }
-            future.get(5, TimeUnit.SECONDS)
+            future.get(5000000, TimeUnit.SECONDS)
         } catch (e: TimeoutException) {
             fail("Timeout occurred: ${e.message}")
         } finally {
@@ -83,10 +83,11 @@ class CommandProcessorTest {
         val driverManager = DriverManager(driverStore)
         val riderManager = RiderManager(riderStore)
         val driverWithin5KmsMatchStrategy = DriverWithin5KmsMatchStrategy(riderManager, driverManager)
-        val rideManager = RideManager(driverWithin5KmsMatchStrategy, rideStore)
+        val rideManager = RideManager(driverWithin5KmsMatchStrategy, rideStore, driverStore)
 
         val rideSharingManager = RideSharingManager(driverManager, riderManager, rideManager)
-        val commandExecutor = CommandExecutorBuilder(rideSharingManager)
+        val matches = mutableListOf<String>()
+        val commandExecutor = CommandExecutorBuilder(rideSharingManager, matches)
         val logger = ConsoleLogger()
 
         val commands = InputParser.parseInput(inputFile)

@@ -5,6 +5,6 @@ import common.entity.Location
 data class Driver (
     val id: String,
     val location: Location,
-    val isOnRide: Boolean? = false,
+    var isOnRide: Boolean = false,
     val rideId: String? = null,
 )

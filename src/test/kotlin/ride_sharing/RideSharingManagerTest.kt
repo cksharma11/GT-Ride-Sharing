@@ -2,7 +2,6 @@ package ride_sharing
 
 import common.entity.Location
 import driver.boundary.DriverManagerBoundary
-import driver.entity.Driver
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -67,7 +66,7 @@ class RideSharingManagerTest {
         `when`(rideManager.match(riderId)).thenReturn(drivers)
 
         val result = rideSharingManager.match(riderId)
-        assertEquals("NO_DRIVER_MATCHED", result)
+        assertEquals("NO_DRIVERS_AVAILABLE", result)
     }
 
     @Test

@@ -45,10 +45,10 @@ class RideStoreTest {
 
         rideStore.stopRide("123", 10, Location(2, 2))
 
-        val retrievedRide = rideStore.getRide("123")
-        assertEquals(RideState.ENDED, retrievedRide?.state)
-        assertEquals(10, retrievedRide?.timeTaken)
-        assertEquals(Location(2, 2), retrievedRide?.destination)
+        val retrievedRide = rideStore.getRide("123")!!
+        assertEquals(RideState.ENDED, retrievedRide.state)
+        assertEquals(10, retrievedRide.timeTaken)
+        assertEquals(Location(2, 2), retrievedRide.destination)
     }
 
     @Test

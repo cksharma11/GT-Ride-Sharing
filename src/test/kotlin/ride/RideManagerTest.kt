@@ -1,6 +1,8 @@
 package ride
 
 import common.entity.Location
+import driver.DriverStore
+import driver.entity.Driver
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
@@ -16,13 +18,15 @@ import ride.entity.RideState
 class RideManagerTest {
     private lateinit var rideMatchingStrategy: RideMatchingStrategy
     private lateinit var rideStore: RideStore
+    private lateinit var driverStore: DriverStore
     private lateinit var rideManager: RideManager
 
     @BeforeEach
     fun setUp() {
         rideMatchingStrategy = mock(RideMatchingStrategy::class.java)
         rideStore = mock(RideStore::class.java)
-        rideManager = RideManager(rideMatchingStrategy, rideStore)
+        driverStore = mock(DriverStore::class.java)
+        rideManager = RideManager(rideMatchingStrategy, rideStore, driverStore)
     }
 
     @Test
@@ -42,6 +46,8 @@ class RideManagerTest {
         val startLocation = Location(0, 0)
         val ride = Ride(rideId, driverId, riderId, startLocation)
 
+        `when`(driverStore.getDriver(driverId)).thenReturn(Driver(driverId, Location(0, 0)))
+
         rideManager.startRide(rideId, driverId, riderId, startLocation)
         verify(rideStore).addRide(ride)
     }
@@ -51,7 +57,11 @@ class RideManagerTest {
         val rideId = "ride123"
         val destination = Location(1, 1)
         val timeTaken = 10
-
+        `when`(rideStore.getRide(rideId)).thenReturn(
+            Ride(
+                rideId, "driverId", "riderId", Location(0, 0), state = RideState.STARTED
+            )
+        )
         rideManager.stopRide(rideId, timeTaken, destination)
         verify(rideStore).stopRide(rideId, timeTaken, destination)
     }
@@ -60,13 +70,7 @@ class RideManagerTest {
     fun testBillValidRide() {
         val rideId = "ride123"
         val ride = Ride(
-            rideId,
-            "driver456",
-            "rider789",
-            Location(0, 0),
-            32,
-            Location(4, 5),
-            RideState.ENDED
+            rideId, "driver456", "rider789", Location(0, 0), 32, Location(4, 5), RideState.ENDED
         )
 
         `when`(rideStore.getRide(rideId)).thenReturn(ride)
@@ -82,13 +86,7 @@ class RideManagerTest {
     fun testBillForNotEndedRide() {
         val rideId = "ride123"
         val ride = Ride(
-            rideId,
-            "driver456",
-            "rider789",
-            Location(0, 0),
-            32,
-            Location(4, 5),
-            RideState.STARTED
+            rideId, "driver456", "rider789", Location(0, 0), 32, Location(4, 5), RideState.STARTED
         )
 
         `when`(rideStore.getRide(rideId)).thenReturn(ride)
