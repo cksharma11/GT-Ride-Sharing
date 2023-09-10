@@ -3,8 +3,9 @@ package rider
 import common.entity.Location
 import common.exception.RiderNotFoundException
 import rider.boundary.RiderManagerBoundary
+import rider.boundary.RiderStoreBoundary
 
-class RiderManager(private val riderStore: RiderStore): RiderManagerBoundary {
+class RiderManager(private val riderStore: RiderStoreBoundary): RiderManagerBoundary {
     override fun addRider(riderId: String, location: Location) {
         riderStore.addRider(riderId, location)
     }

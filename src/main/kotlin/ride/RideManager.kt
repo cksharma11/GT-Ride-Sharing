@@ -9,13 +9,14 @@ import ride.Charges.BaseFare
 import ride.Charges.ServiceTaxPercentage
 import ride.boundary.RideManagerBoundary
 import ride.boundary.RideMatchingStrategy
+import ride.boundary.RideStoreBoundary
 import ride.entity.Bill
 import ride.entity.Ride
 import ride.entity.RideState
 import kotlin.math.roundToInt
 
 class RideManager(
-    private val rideMatchingStrategy: RideMatchingStrategy, private val rideStore: RideStore
+    private val rideMatchingStrategy: RideMatchingStrategy, private val rideStore: RideStoreBoundary
 ) : RideManagerBoundary {
     override fun match(riderId: String): List<String> {
         return rideMatchingStrategy.match(riderId)

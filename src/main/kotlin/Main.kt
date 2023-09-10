@@ -2,6 +2,7 @@ import command_executor.CommandExecutorBuilder
 import driver.DriverManager
 import driver.DriverStore
 import driver.entity.Driver
+import logger.ConsoleLogger
 import parser.InputParser
 import ride.RideManager
 import ride.RideStore
@@ -31,10 +32,14 @@ fun main(args: Array<String>) {
     val rideSharingManager = RideSharingManager(driverManager, riderManager, rideManager)
     val commandExecutor = CommandExecutorBuilder(rideSharingManager)
 
+    val logger = ConsoleLogger()
+
     val commands = InputParser.parseInput(inputFile)
 
     commands.forEach { command ->
         val output = commandExecutor.build(command.command).execute(command.args)
-        println(output)
+        if(output is String) {
+            logger.log(output)
+        }
     }
 }
