@@ -16,7 +16,7 @@ import rider.RiderManager
 import rider.RiderStore
 
 fun main(args: Array<String>) {
-    val inputFile = "input-2"
+    val inputFile = args[0]
 
     val drivers: MutableMap<String, Driver> = mutableMapOf()
     val rides: MutableMap<String, Ride> = mutableMapOf()
