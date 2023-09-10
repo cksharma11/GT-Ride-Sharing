@@ -1,12 +1,14 @@
 package ride
 
 import common.entity.Location
+import common.exception.DriverAlreadyOnRideException
 import driver.DriverStore
 import driver.entity.Driver
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
@@ -50,6 +52,17 @@ class RideManagerTest {
 
         rideManager.startRide(rideId, driverId, riderId, startLocation)
         verify(rideStore).addRide(ride)
+    }
+
+    @Test
+    fun testStartRideWhenDriverAlreadyOnRide() {
+        val rideId = "ride123"
+        val driverId = "driver456"
+        val riderId = "rider789"
+        val startLocation = Location(0, 0)
+
+        `when`(driverStore.getDriver(driverId)).thenReturn(Driver(driverId, Location(0, 0), isOnRide = true))
+        assertThrows<DriverAlreadyOnRideException> { rideManager.startRide(rideId, driverId, riderId, startLocation) }
     }
 
     @Test

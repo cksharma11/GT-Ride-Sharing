@@ -47,6 +47,16 @@ class CommandProcessorTest {
         assertCommandProcessorOutput(expectedOutput)
     }
 
+    @Test
+    fun testWithTestFile3WithConsoleLogger() {
+        setUpForInput("test-input-3")
+        val expectedOutput =
+            "DRIVERS_MATCHED D1 D2\n" + "DRIVERS_MATCHED D1 D2\n" +
+                    "RIDE_STARTED RIDE-101\n" + "INVALID_RIDE\n" + "RIDE_NOT_COMPLETED"
+
+        assertCommandProcessorOutput(expectedOutput)
+    }
+
     private fun assertCommandProcessorOutput(expectedOutput: String) {
         val outputStream = ByteArrayOutputStream()
         val printStream = PrintStream(outputStream)

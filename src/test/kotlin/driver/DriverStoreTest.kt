@@ -1,10 +1,12 @@
 package driver
 
 import common.entity.Location
+import common.exception.DriverNotFoundException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class DriverStoreTest {
     private lateinit var driverStore: DriverStore
@@ -49,5 +51,32 @@ class DriverStoreTest {
         assertEquals(driver1Location, drivers[0].location)
         assertEquals(driver2Id, drivers[1].id)
         assertEquals(driver2Location, drivers[1].location)
+    }
+
+    @Test
+    fun testGetDriverInvalidDriverId() {
+        assertThrows<DriverNotFoundException> { driverStore.getDriver("driverId") }
+    }
+
+    @Test
+    fun testSetOnRideStatus() {
+        val driverId = "123"
+        val location = Location(1, 1)
+
+        driverStore.addDriver(driverId, location)
+        driverStore.setOnRideStatus(driverId, true)
+        val driver = driverStore.getDriver(driverId)
+        assertEquals(driver.isOnRide, true)
+    }
+
+    @Test
+    fun testSetOnRideStatusInvalidRiderId() {
+        val driverId = "123"
+        val location = Location(1, 1)
+
+        driverStore.addDriver(driverId, location)
+        driverStore.setOnRideStatus("invalid-rider-id", true)
+        val driver = driverStore.getDriver(driverId)
+        assertEquals(driver.isOnRide, false)
     }
 }
