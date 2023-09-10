@@ -79,6 +79,27 @@ class RideManagerTest {
     }
 
     @Test
+    fun testBillForNotEndedRide() {
+        val rideId = "ride123"
+        val ride = Ride(
+            rideId,
+            "driver456",
+            "rider789",
+            Location(0, 0),
+            32,
+            Location(4, 5),
+            RideState.STARTED
+        )
+
+        `when`(rideStore.getRide(rideId)).thenReturn(ride)
+        val result = rideManager.bill(rideId)
+
+        assertNotNull(result)
+        assertEquals("RIDE_NOT_COMPLETED", result.error)
+        assertEquals(null, result.totalFare)
+    }
+
+    @Test
     fun testBillInvalidRide() {
         val rideId = "invalidRideId"
         `when`(rideStore.getRide(rideId)).thenReturn(null)

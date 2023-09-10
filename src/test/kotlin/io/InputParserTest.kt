@@ -1,11 +1,13 @@
 package io
 
+import common.exception.InvalidCommandException
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import parser.CommandType
 import parser.InputParser
 import java.io.FileNotFoundException
+import kotlin.test.assertFailsWith
 
 class InputParserTest {
     @Test
@@ -19,6 +21,11 @@ class InputParserTest {
         assertEquals(CommandType.START_RIDE, commands[5].command)
         assertEquals(CommandType.STOP_RIDE, commands[6].command)
         assertEquals(CommandType.BILL, commands[7].command)
+    }
+
+    @Test
+    fun testParseInputWithInvalidCommand() {
+        assertFailsWith<InvalidCommandException> { InputParser.parseInput("test-input-invalid-command") }
     }
 
     @Test

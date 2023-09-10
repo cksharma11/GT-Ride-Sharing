@@ -52,6 +52,16 @@ class RideStoreTest {
     }
 
     @Test
+    fun testStopRideForEndedRide() {
+        val ride = Ride("123", "driverId", "riderId", Location(1, 1), state = RideState.ENDED)
+        rideStore.addRide(ride)
+
+        assertFailsWith<RideCannotBeEndedException> {
+            rideStore.stopRide("123", 10, Location(2, 2))
+        }
+    }
+
+    @Test
     fun testStopRideNotFound() {
         val exception = assertFailsWith<RideCannotBeEndedException> {
             rideStore.stopRide("123", 10, Location(2, 2))

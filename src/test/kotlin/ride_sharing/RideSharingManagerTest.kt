@@ -2,6 +2,7 @@ package ride_sharing
 
 import common.entity.Location
 import driver.boundary.DriverManagerBoundary
+import driver.entity.Driver
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -25,29 +26,25 @@ class RideSharingManagerTest {
         rideSharingManager = RideSharingManager(driverManager, riderManager, rideManager)
     }
 
-//    @Test
-//    fun testAddDriver() {
-//        val driverId = "D123"
-//        val location = Location(1, 1)
-//
-//        `when`(driverManager.addDriver(driverId, location)).thenReturn(Unit)
-//
-//        rideSharingManager.addDriver(driverId, location.x, location.y)
-//
-//        verify(driverManager).addDriver(driverId, location)
-//    }
+    @Test
+    fun testAddDriver() {
+        val driverId = "D123"
+        val location = Location(1, 1)
 
-//    @Test
-//    fun testAddRider() {
-//        val riderId = "R123"
-//        val location = Location(2, 2)
-//
-//        doNothing().`when`(riderManager.addRider(riderId, location))
-//
-//        rideSharingManager.addRider(riderId, location.x, location.y)
-//
-//        verify(riderManager).addRider(riderId, location)
-//    }
+        `when`(driverManager.addDriver(driverId, location)).then{}
+        rideSharingManager.addDriver(driverId, location.x, location.y)
+        verify(driverManager).addDriver(driverId, location)
+    }
+
+    @Test
+    fun testAddRider() {
+        val riderId = "R123"
+        val location = Location(2, 2)
+
+        `when`(rideManager.match(riderId)).then{}
+        rideSharingManager.addRider(riderId, location.x, location.y)
+        verify(riderManager).addRider(riderId, location)
+    }
 
     @Test
     fun testMatch() {
@@ -60,6 +57,17 @@ class RideSharingManagerTest {
 
         val result = rideSharingManager.match(riderId)
         assertEquals("DRIVERS_MATCHED $driverId1 $driverId2", result)
+    }
+
+    @Test
+    fun testMatchWhenNoMatch() {
+        val riderId = "R123"
+        val drivers = listOf<String>()
+
+        `when`(rideManager.match(riderId)).thenReturn(drivers)
+
+        val result = rideSharingManager.match(riderId)
+        assertEquals("NO_DRIVER_MATCHED", result)
     }
 
     @Test
@@ -100,5 +108,18 @@ class RideSharingManagerTest {
 
         val result = rideSharingManager.bill(rideId)
         assertEquals("BILL $riderId $riderId $totalFare", result)
+    }
+
+    @Test
+    fun testBillWithError() {
+        val rideId = "R123"
+        val riderId = "R456"
+        val driverId = "driverId"
+
+        val bill = Bill(riderId, driverId, error = "RIDE_NOT_COMPLETED")
+        `when`(rideManager.bill(rideId)).thenReturn(bill)
+
+        val result = rideSharingManager.bill(rideId)
+        assertEquals("RIDE_NOT_COMPLETED", result)
     }
 }

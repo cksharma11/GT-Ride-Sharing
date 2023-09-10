@@ -23,6 +23,9 @@ class RideSharingManager(
 
     override fun match(riderId: String): String {
         val drivers = rideManager.match(riderId)
+        if(drivers.isEmpty()) {
+            return "NO_DRIVER_MATCHED"
+        }
         var output = "DRIVERS_MATCHED"
         drivers.forEach { output += " $it" }
         return output
@@ -42,6 +45,9 @@ class RideSharingManager(
 
     override fun bill(rideId: String): String {
         val bill = rideManager.bill(rideId)
+        if(bill.error != null) {
+            return bill.error
+        }
         return "BILL ${bill.riderId} ${bill.riderId} ${bill.totalFare}"
     }
 }
