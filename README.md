@@ -1,5 +1,10 @@
 # GT-Ride-Sharing
 
+## Requirement 
+
+- Kotlin
+- JDK-17
+
 ## Running with input files located in resource
 
 input-1
