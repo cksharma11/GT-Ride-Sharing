@@ -96,8 +96,8 @@ class CommandProcessorTest {
         val rideManager = RideManager(driverWithin5KmsMatchStrategy, rideStore, driverStore)
 
         val rideSharingManager = RideSharingManager(driverManager, riderManager, rideManager)
-        val matches = mutableListOf<String>()
-        val commandExecutor = CommandExecutorBuilder(rideSharingManager, matches)
+        val helperArgs = HelperArgs()
+        val commandExecutor = CommandExecutorBuilder(rideSharingManager, helperArgs)
         val logger = ConsoleLogger()
 
         val commands = InputParser.parseInput(inputFile)

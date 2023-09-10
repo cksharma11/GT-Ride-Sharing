@@ -1,11 +1,12 @@
 package command.executor
 
+import command.HelperArgs
 import parser.CommandType
 import ride_sharing.RideSharingManager
 
 class CommandExecutorBuilder(
     private val rideSharingManager: RideSharingManager,
-    private val matches: MutableList<String>
+    private val matches: HelperArgs
 ) {
     fun build(commandName: CommandType): CommandExecutor {
         return when (commandName) {
