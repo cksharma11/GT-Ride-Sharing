@@ -69,7 +69,7 @@ class CommandProcessorTest {
             val future = executor.submit {
                 commandProcessor.processCommands()
             }
-            future.get(5000000, TimeUnit.SECONDS)
+            future.get(5, TimeUnit.SECONDS)
         } catch (e: TimeoutException) {
             fail("Timeout occurred: ${e.message}")
         } finally {

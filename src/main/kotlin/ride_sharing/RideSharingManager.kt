@@ -5,6 +5,12 @@ import common.entity.Location
 import common.exception.DriverAlreadyOnRideException
 import common.exception.DriverNotFoundException
 import common.exception.RideCannotBeEndedException
+import messages.Messages.BILL_MESSAGE
+import messages.Messages.DRIVERS_MATCHED_MESSAGE
+import messages.Messages.INVALID_RIDE_MESSAGE
+import messages.Messages.NO_DRIVERS_AVAILABLE_MESSAGE
+import messages.Messages.RIDE_STARTED_MESSAGE
+import messages.Messages.RIDE_STOPPED_MESSAGE
 import ride.boundary.RideManagerBoundary
 import ride_sharing.boundary.RideSharingManagerBoundary
 import rider.boundary.RiderManagerBoundary
@@ -27,9 +33,9 @@ class RideSharingManager(
     override fun match(riderId: String): String {
         val drivers = rideManager.match(riderId)
         if (drivers.isEmpty()) {
-            return "NO_DRIVERS_AVAILABLE"
+            return NO_DRIVERS_AVAILABLE_MESSAGE
         }
-        var output = "DRIVERS_MATCHED"
+        var output = DRIVERS_MATCHED_MESSAGE
         drivers.forEach { output += " $it" }
         return output
     }
@@ -38,11 +44,11 @@ class RideSharingManager(
         val rider = riderManager.getRider(riderId)
         return try {
             rideManager.startRide(rideId, driverId, riderId, rider.location)
-            "RIDE_STARTED $rideId"
+            "$RIDE_STARTED_MESSAGE $rideId"
         } catch (ex: DriverAlreadyOnRideException) {
-            "INVALID_RIDE"
+            INVALID_RIDE_MESSAGE
         } catch (ex: DriverNotFoundException) {
-            "INVALID_RIDE"
+            INVALID_RIDE_MESSAGE
         }
     }
 
@@ -50,9 +56,9 @@ class RideSharingManager(
         val destination = Location(destinationX, destinationY)
         return try {
             rideManager.stopRide(rideId, timeTaken, destination)
-            "RIDE_STOPPED $rideId"
+            "$RIDE_STOPPED_MESSAGE $rideId"
         } catch (ex: RideCannotBeEndedException) {
-            "INVALID_RIDE"
+            INVALID_RIDE_MESSAGE
         }
     }
 
@@ -61,6 +67,6 @@ class RideSharingManager(
         if (bill.error != null) {
             return bill.error
         }
-        return "BILL ${bill.riderId} ${bill.riderId} ${bill.totalFare}"
+        return "$BILL_MESSAGE ${bill.riderId} ${bill.riderId} ${bill.totalFare}"
     }
 }

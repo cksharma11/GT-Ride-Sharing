@@ -5,6 +5,8 @@ import common.entity.findDistanceFrom
 import common.exception.DriverAlreadyOnRideException
 import driver.boundary.DriverStoreBoundary
 import extension.roundToTwoDecimalPlaces
+import messages.Messages.INVALID_RIDE_MESSAGE
+import messages.Messages.RIDE_NOT_COMPLETED_MESSAGE
 import ride.Charges.AdditionPerKm
 import ride.Charges.AdditionPerMinute
 import ride.Charges.BaseFare
@@ -42,8 +44,8 @@ class RideManager(
     }
 
     override fun bill(rideId: String): Bill {
-        val ride = rideStore.getRide(rideId) ?: return Bill(error = "INVALID_RIDE")
-        if (ride.state != RideState.ENDED) return Bill(error = "RIDE_NOT_COMPLETED")
+        val ride = rideStore.getRide(rideId) ?: return Bill(error = INVALID_RIDE_MESSAGE)
+        if (ride.state != RideState.ENDED) return Bill(error = RIDE_NOT_COMPLETED_MESSAGE)
         return Bill(ride.riderId, ride.driverId, totalFare = calculateFare(ride))
     }
 
