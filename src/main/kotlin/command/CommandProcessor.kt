@@ -1,14 +1,13 @@
 package command
 
 import command.executor.CommandExecutorBuilder
-import logger.ConsoleLogger
+import logger.boundary.Logger
 import parser.Command
-import parser.CommandType
 
 class CommandProcessor(
     private val commands: List<Command>,
     private val commandExecutor: CommandExecutorBuilder,
-    private val logger: ConsoleLogger
+    private val logger: Logger
 ) {
     fun processCommands() {
         commands.forEach { command ->
